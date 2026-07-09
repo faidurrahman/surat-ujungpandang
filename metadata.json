@@ -1,0 +1,8 @@
+{
+  "name": "E-Gov Persuratan",
+  "description": "Sistem Manajemen Persuratan Masuk & Disposisi Smart ASN",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
