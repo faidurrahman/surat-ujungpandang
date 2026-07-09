@@ -76,11 +76,11 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen }: SidebarP
         <div className="p-4 mt-auto bg-slate-950 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center text-white font-bold shrink-0">
-              BS
+              NS
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-white font-medium truncate">Drs. Budi Santoso</p>
-              <p className="text-xs text-slate-500 truncate">Camat / NIP 1975...</p>
+              <p className="text-sm text-white font-medium truncate">Nanin Sudiar, A.P</p>
+              <p className="text-xs text-slate-500 truncate">Camat / NIP. 19760625 199412 2 001</p>
             </div>
           </div>
         </div>

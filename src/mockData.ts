@@ -10,7 +10,7 @@ export const currentUser: User = {
 
 export const users: User[] = [
   { id: 'u1', name: 'Siti Aminah', nip: '199001012015042001', role: 'FRONT_OFFICE', jabatan: 'Resepsionis FO' },
-  currentUser,
+  { id: 'u2', name: 'Nanin Sudiar, A.P', nip: '19760625 199412 2 001', role: 'CAMAT', jabatan: 'Camat' },
   { id: 'u3', name: 'Andi Pratama, S.STP', nip: '198506152008011003', role: 'KASUBAG', jabatan: 'Kasubag Umum & Kepegawaian' },
   { id: 'u4', name: 'Rini Wulandari, S.Kom', nip: '199211202019022005', role: 'STAF', jabatan: 'Staf Pelaksana Administrasi' },
   { id: 'u5', name: 'Hafsah Sari', nip: '198802142010021004', role: 'ADMIN', jabatan: 'Admin Persuratan' },

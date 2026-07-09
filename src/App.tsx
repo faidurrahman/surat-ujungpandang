@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Menu } from 'lucide-react';
+import { Search, Bell, Menu, Calendar, Archive } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { LetterList } from './components/LetterList';
 import { LetterDetail } from './components/LetterDetail';
@@ -21,6 +21,46 @@ export default function App() {
   const [disposisiList, setDisposisiList] = useState<Disposisi[]>([]);
   const [suratKeluarList, setSuratKeluarList] = useState<SuratKeluar[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [arsipStartDate, setArsipStartDate] = useState('');
+  const [arsipEndDate, setArsipEndDate] = useState('');
+  const [filteredArsip, setFilteredArsip] = useState<SuratMasuk[] | null>(null);
+
+  useEffect(() => {
+    if (activeTab !== 'arsip') {
+      setArsipStartDate('');
+      setArsipEndDate('');
+      setFilteredArsip(null);
+    }
+  }, [activeTab]);
+
+  const handleFilterArsip = () => {
+    if (!arsipStartDate || !arsipEndDate) {
+      alert("Harap pilih tanggal awal dan tanggal akhir.");
+      return;
+    }
+    
+    const start = new Date(arsipStartDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(arsipEndDate);
+    end.setHours(23, 59, 59, 999);
+    
+    const filtered = suratList.filter(s => {
+      if (s.status !== 'SELESAI') return false;
+      const dateToCompare = new Date(s.lastActionDate || s.tanggalDiterima);
+      return dateToCompare >= start && dateToCompare <= end;
+    });
+    
+    setFilteredArsip(filtered);
+    setSelectedLetterId(null);
+  };
+
+  const handleResetArsip = () => {
+    setArsipStartDate('');
+    setArsipEndDate('');
+    setFilteredArsip(null);
+    setSelectedLetterId(null);
+  };
 
   useEffect(() => {
     loadData();
@@ -295,37 +335,86 @@ export default function App() {
                </div>
             </div>
           ) : ['masuk', 'disposisi', 'arsip'].includes(activeTab) ? (
-            <>
-              {/* List View */}
-              <div className={`h-full ${selectedLetter ? 'hidden lg:flex' : 'flex w-full'} lg:w-auto`}>
-                <LetterList 
-                  letters={
-                    activeTab === 'arsip' ? suratList.filter(s => s.status === 'SELESAI') :
-                    suratList.filter(s => s.status !== 'SELESAI')
-                  } 
-                  selectedId={selectedLetterId} 
-                  onSelect={setSelectedLetterId}
-                  onAddClick={() => setIsAddModalOpen(true)}
-                />
-              </div>
-              
-              {/* Detail View */}
-              <div className={`h-full flex-1 ${!selectedLetter ? 'hidden lg:flex' : 'flex'}`}>
-                {selectedLetter ? (
-                  <LetterDetail 
-                    surat={selectedLetter} 
-                    disposisiHistory={disposisiHistory} 
-                    currentUser={currentUser}
-                    onBack={() => setSelectedLetterId(null)}
-                    onAction={handleAction}
-                  />
-                ) : (
-                  <div className="flex-1 flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm text-slate-400 font-medium">
-                    Pilih surat untuk melihat detail
+            <div className="flex flex-col h-full w-full overflow-hidden gap-6">
+              {activeTab === 'arsip' && (
+                <div className="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-end gap-4 shrink-0">
+                  <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Dari Tanggal</label>
+                      <div className="relative">
+                        <input type="date" value={arsipStartDate} onChange={e => setArsipStartDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
+                        <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Sampai Tanggal</label>
+                      <div className="relative">
+                        <input type="date" value={arsipEndDate} onChange={e => setArsipEndDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
+                        <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                      </div>
+                    </div>
                   </div>
-                )}
-              </div>
-            </>
+                  <div className="flex gap-3 w-full md:w-auto mt-2 md:mt-0">
+                    <button onClick={handleFilterArsip} className="flex-1 md:flex-none px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+                      Tampilkan Arsip
+                    </button>
+                    <button onClick={handleResetArsip} className="flex-1 md:flex-none px-5 py-2 border border-slate-300 hover:bg-slate-50 text-slate-600 text-sm font-bold rounded-lg transition-colors">
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'arsip' && filteredArsip === null ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                    <Archive className="w-8 h-8 text-blue-500" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">Pencarian Arsip</h3>
+                  <p className="text-slate-500 max-w-md text-sm">Silakan pilih rentang tanggal untuk menampilkan data arsip.</p>
+                </div>
+              ) : activeTab === 'arsip' && filteredArsip?.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                    <Archive className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">Arsip Tidak Ditemukan</h3>
+                  <p className="text-slate-500 max-w-md text-sm">Tidak ada arsip yang ditemukan pada rentang tanggal tersebut.</p>
+                </div>
+              ) : (
+                <div className="flex flex-1 gap-6 overflow-hidden min-h-0">
+                  {/* List View */}
+                  <div className={`h-full ${selectedLetter ? 'hidden lg:flex' : 'flex w-full'} lg:w-auto`}>
+                    <LetterList 
+                      letters={
+                        activeTab === 'arsip' ? (filteredArsip || []) :
+                        suratList.filter(s => s.status !== 'SELESAI')
+                      } 
+                      selectedId={selectedLetterId} 
+                      onSelect={setSelectedLetterId}
+                      onAddClick={() => setIsAddModalOpen(true)}
+                    />
+                  </div>
+                  
+                  {/* Detail View */}
+                  <div className={`h-full flex-1 ${!selectedLetter ? 'hidden lg:flex' : 'flex'}`}>
+                    {selectedLetter ? (
+                      <LetterDetail 
+                        surat={selectedLetter} 
+                        disposisiHistory={disposisiHistory} 
+                        currentUser={currentUser}
+                        onBack={() => setSelectedLetterId(null)}
+                        onAction={handleAction}
+                      />
+                    ) : (
+                      <div className="flex-1 flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm text-slate-400 font-medium">
+                        Pilih surat untuk melihat detail
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="flex-1 flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm flex-col w-full h-full">
               <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4">
