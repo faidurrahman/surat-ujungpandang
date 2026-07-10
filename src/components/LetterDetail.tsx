@@ -159,9 +159,9 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 overflow-y-auto lg:overflow-hidden">
         {/* Timeline Audit Trail */}
-        <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-[300px] overflow-hidden">
+        <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-[300px] lg:min-h-0 lg:overflow-hidden shrink-0 lg:shrink">
           <div className="p-4 bg-slate-900 text-white shrink-0">
             <p className="text-[10px] font-bold opacity-60 uppercase mb-1">Audit Trail / Tracking Surat</p>
             <p className="text-sm font-bold truncate">{surat.nomorSurat}</p>
@@ -235,7 +235,7 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
         </div>
 
         {/* Action Form */}
-        <div className="w-full lg:w-[340px] shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+        <div className="w-full lg:w-[340px] shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col lg:overflow-hidden">
           <div className="p-4 bg-slate-50 border-b border-slate-100 shrink-0">
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-2">
               <Send className="w-4 h-4 text-blue-600" />

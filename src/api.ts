@@ -75,8 +75,33 @@ export async function fetchSuratKeluar() {
   try {
     const response = await fetch(`${APP_SCRIPT_URL}?action=getSuratKeluar`);
     const text = await response.text();
-    console.log("Raw response from getSuratKeluar:", text);
-    return JSON.parse(text);
+    const data = JSON.parse(text);
+    return data.map((item: any) => {
+      let nomor = item["Nomor Surat Keluar"] || item.nomorSurat;
+      let tgl = item["Tanggal Keluar"] || item.tanggalDraft;
+      let perihal = item["Tujuan Instansi"] || item.perihal;
+      let status = item["Perihal"] || item.status;
+      let draftUrl = item["Pembuat Draft"] || item["Link File Surat Keluar"] || item.draftUrl || '';
+      
+      // Auto-fix column shifts from Google Apps Script
+      if (!nomor && (typeof tgl === 'number' || (typeof tgl === 'string' && tgl.length < 8))) {
+        nomor = String(tgl).padStart(3, '0');
+        tgl = new Date().toISOString();
+      }
+      
+      if (draftUrl.includes('/view')) {
+        draftUrl = draftUrl.replace('/view', '/preview').split('?')[0];
+      }
+
+      return {
+        id: item["ID Surat Keluar"] || item.id,
+        nomorSurat: nomor || '',
+        tanggalDraft: tgl || new Date().toISOString(),
+        perihal: perihal || '',
+        status: status || 'DRAFT',
+        draftUrl: draftUrl,
+      };
+    });
   } catch (e) {
     console.error("Failed to fetch Surat Keluar:", e);
     return [];

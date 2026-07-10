@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Menu, Calendar, Archive } from 'lucide-react';
+import { Search, Bell, Menu, Calendar, Archive, FileText } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { LetterList } from './components/LetterList';
 import { LetterDetail } from './components/LetterDetail';
@@ -26,13 +26,47 @@ export default function App() {
   const [arsipEndDate, setArsipEndDate] = useState('');
   const [filteredArsip, setFilteredArsip] = useState<SuratMasuk[] | null>(null);
 
+  const [keluarStartDate, setKeluarStartDate] = useState('');
+  const [keluarEndDate, setKeluarEndDate] = useState('');
+  const [filteredKeluar, setFilteredKeluar] = useState<SuratKeluar[] | null>(null);
+
   useEffect(() => {
     if (activeTab !== 'arsip') {
       setArsipStartDate('');
       setArsipEndDate('');
       setFilteredArsip(null);
     }
+    if (activeTab !== 'keluar') {
+      setKeluarStartDate('');
+      setKeluarEndDate('');
+      setFilteredKeluar(null);
+    }
   }, [activeTab]);
+
+  const handleFilterKeluar = () => {
+    if (!keluarStartDate || !keluarEndDate) {
+      alert("Harap pilih tanggal awal dan tanggal akhir.");
+      return;
+    }
+    
+    const start = new Date(keluarStartDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(keluarEndDate);
+    end.setHours(23, 59, 59, 999);
+    
+    const filtered = suratKeluarList.filter(s => {
+      const dateToCompare = new Date(s.tanggalDraft);
+      return dateToCompare >= start && dateToCompare <= end;
+    });
+    
+    setFilteredKeluar(filtered);
+  };
+
+  const handleResetKeluar = () => {
+    setKeluarStartDate('');
+    setKeluarEndDate('');
+    setFilteredKeluar(null);
+  };
 
   const handleFilterArsip = () => {
     if (!arsipStartDate || !arsipEndDate) {
@@ -326,13 +360,64 @@ export default function App() {
           {activeTab === 'dashboard' ? (
             <DashboardTracking suratList={suratList} onSelectSurat={handleSelectSurat} />
           ) : activeTab === 'keluar' ? (
-            <div className="w-full h-full flex justify-center">
-               <div className="w-full max-w-5xl h-full">
-                 <SuratKeluarList 
-                   suratKeluar={suratKeluarList} 
-                   onAddClick={() => setIsAddKeluarModalOpen(true)} 
-                 />
-               </div>
+            <div className="flex flex-col h-full w-full overflow-hidden gap-6">
+              <div className="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-end gap-4 shrink-0">
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Dari Tanggal</label>
+                    <div className="relative">
+                      <input type="date" value={keluarStartDate} onChange={e => setKeluarStartDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
+                      <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Sampai Tanggal</label>
+                    <div className="relative">
+                      <input type="date" value={keluarEndDate} onChange={e => setKeluarEndDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
+                      <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-3 w-full md:w-auto mt-2 md:mt-0">
+                  <button onClick={handleFilterKeluar} className="flex-1 md:flex-none px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+                    Tampilkan
+                  </button>
+                  <button onClick={handleResetKeluar} className="flex-1 md:flex-none px-5 py-2 border border-slate-300 hover:bg-slate-50 text-slate-600 text-sm font-bold rounded-lg transition-colors">
+                    Reset
+                  </button>
+                  <button 
+                    onClick={() => setIsAddKeluarModalOpen(true)}
+                    className="flex-1 md:flex-none px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+                    + Buat Baru
+                  </button>
+                </div>
+              </div>
+              {filteredKeluar === null ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                    <FileText className="w-8 h-8 text-blue-500" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">Pencarian Surat Keluar</h3>
+                  <p className="text-slate-500 max-w-md text-sm">Silakan pilih rentang tanggal untuk menampilkan data surat keluar.</p>
+                </div>
+              ) : filteredKeluar?.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                    <FileText className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">Surat Keluar Tidak Ditemukan</h3>
+                  <p className="text-slate-500 max-w-md text-sm">Tidak ada surat keluar yang ditemukan pada rentang tanggal tersebut.</p>
+                </div>
+              ) : (
+                <div className="flex flex-1 overflow-hidden min-h-0 justify-center">
+                  <div className="w-full max-w-5xl h-full">
+                    <SuratKeluarList
+                      suratKeluar={filteredKeluar}
+                      onAddClick={() => setIsAddKeluarModalOpen(true)}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           ) : ['masuk', 'disposisi', 'arsip'].includes(activeTab) ? (
             <div className="flex flex-col h-full w-full overflow-hidden gap-6">
