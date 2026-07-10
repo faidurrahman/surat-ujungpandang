@@ -163,7 +163,7 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
         {/* Timeline Audit Trail */}
         <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-[300px] lg:min-h-0 lg:overflow-hidden shrink-0 lg:shrink">
           <div className="p-4 bg-slate-900 text-white shrink-0">
-            <p className="text-[10px] font-bold opacity-60 uppercase mb-1">Audit Trail / Tracking Surat</p>
+            <p className="text-[10px] font-bold opacity-60 uppercase mb-1">Tracking Surat</p>
             <p className="text-sm font-bold truncate">{surat.nomorSurat}</p>
           </div>
           <div className="flex-1 p-4 lg:p-6 overflow-y-auto relative">
