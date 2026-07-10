@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Menu, Calendar, Archive, FileText } from 'lucide-react';
+import { Search, Bell, Menu, Calendar, Archive, FileText, LogOut } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { LetterList } from './components/LetterList';
 import { LetterDetail } from './components/LetterDetail';
@@ -29,6 +29,67 @@ export default function App() {
   const [keluarStartDate, setKeluarStartDate] = useState('');
   const [keluarEndDate, setKeluarEndDate] = useState('');
   const [filteredKeluar, setFilteredKeluar] = useState<SuratKeluar[] | null>(null);
+  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const authData = localStorage.getItem('authData');
+      if (authData) {
+        const { timestamp } = JSON.parse(authData);
+        const twelveHours = 12 * 60 * 60 * 1000;
+        const timeElapsed = new Date().getTime() - timestamp;
+        
+        if (timeElapsed < twelveHours) {
+          setIsAuthenticated(true);
+          
+          const remainingTime = twelveHours - timeElapsed;
+          const timeoutId = setTimeout(() => {
+            setIsAuthenticated(false);
+            localStorage.removeItem('authData');
+            setLoginUsername('');
+            setLoginPassword('');
+          }, remainingTime);
+          
+          return () => clearTimeout(timeoutId);
+        } else {
+          localStorage.removeItem('authData');
+          setIsAuthenticated(false);
+        }
+      }
+    };
+    
+    return checkAuth();
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loginUsername === 'admin' && loginPassword === 'samiun15') {
+      setIsAuthenticated(true);
+      setLoginError('');
+      localStorage.setItem('authData', JSON.stringify({ timestamp: new Date().getTime() }));
+      
+      const twelveHours = 12 * 60 * 60 * 1000;
+      setTimeout(() => {
+        setIsAuthenticated(false);
+        localStorage.removeItem('authData');
+        setLoginUsername('');
+        setLoginPassword('');
+      }, twelveHours);
+    } else {
+      setLoginError('Username atau password salah.');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('authData');
+    setLoginUsername('');
+    setLoginPassword('');
+  };
 
   useEffect(() => {
     if (activeTab !== 'arsip') {
@@ -313,6 +374,56 @@ export default function App() {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-8 h-8" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-800">Sistem Persuratan</h1>
+            <p className="text-sm text-slate-500 mt-2">Kecamatan Ujung Pandang</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wide mb-2">Username</label>
+              <input 
+                type="text" 
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                placeholder="Masukkan username"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wide mb-2">Password</label>
+              <input 
+                type="password" 
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                placeholder="Masukkan password"
+              />
+            </div>
+
+            {loginError && (
+              <p className="text-red-500 text-sm font-medium text-center bg-red-50 py-2 rounded-lg">{loginError}</p>
+            )}
+
+            <button 
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors shadow-sm"
+            >
+              Masuk
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen w-full bg-slate-50 font-sans text-slate-800 overflow-hidden">
       <Sidebar 
@@ -351,6 +462,13 @@ export default function App() {
             <button className="p-2 text-slate-400 hover:text-blue-600 relative">
               <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+            <button 
+              onClick={handleLogout}
+              className="p-2 text-slate-400 hover:text-red-600 transition-colors"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
             </button>
           </div>
         </header>

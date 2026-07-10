@@ -39,7 +39,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen }: SidebarP
             </div>
             <h1 className="text-white font-semibold text-lg leading-tight tracking-tight">
               E-PERSURATAN<br/>
-              <span className="text-xs text-slate-400 font-normal uppercase tracking-widest block mt-0.5">Smart ASN v2.4</span>
+              <span className="text-xs text-slate-400 font-normal uppercase tracking-widest block mt-0.5">Kecamatan Ujung Pandang</span>
             </h1>
           </div>
           <button 
