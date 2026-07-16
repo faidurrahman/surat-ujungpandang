@@ -20,6 +20,8 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
   const [instruksi, setInstruksi] = useState("");
   const [actionFile, setActionFile] = useState<File | null>(null);
   const [actionFileData, setActionFileData] = useState<string>('');
+  const [notulenFile, setNotulenFile] = useState<File | null>(null);
+  const [notulenFileData, setNotulenFileData] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -46,6 +48,24 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
   const handleActionFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       processFile(e.target.files[0]);
+    }
+  };
+
+  const processNotulenFile = (f: File) => {
+    setNotulenFile(f);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target && event.target.result) {
+        const base64 = (event.target.result as string).split(',')[1];
+        setNotulenFileData(base64);
+      }
+    };
+    reader.readAsDataURL(f);
+  };
+
+  const handleNotulenFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      processNotulenFile(e.target.files[0]);
     }
   };
 
@@ -76,6 +96,8 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
           keUserRoleBaru: roleBaru,
           file: actionFile,
           fileData: actionFileData,
+          notulenFile: notulenFile,
+          notulenFileData: notulenFileData,
         });
       }
     } finally {
@@ -95,6 +117,8 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
           keUserRoleBaru: 'ADMIN',
           file: actionFile,
           fileData: actionFileData,
+          notulenFile: notulenFile,
+          notulenFileData: notulenFileData,
         });
       }
     } finally {
@@ -140,18 +164,32 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
           </div>
           {(() => {
             const primaryAttachmentUrl = surat.lampiranUrl || (disposisiHistory.length > 0 ? disposisiHistory[0].lampiranUrl : null);
-            return primaryAttachmentUrl ? (
-              <button 
-                onClick={() => setPreviewUrl(primaryAttachmentUrl)}
-                className="flex w-full md:w-auto items-center justify-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors shrink-0"
-              >
-                <Paperclip className="w-4 h-4" />
-                Lihat Lampiran
-              </button>
-            ) : (
-              <div className="flex w-full md:w-auto items-center justify-center gap-2 px-4 py-2 bg-slate-50 text-slate-400 rounded-lg text-xs font-bold shrink-0 cursor-not-allowed">
-                <Paperclip className="w-4 h-4" />
-                Tidak Ada Lampiran
+            const notulenUrl = surat.notulenUrl || disposisiHistory.find(d => d.instruksi === 'Lampiran Notulen' || d.statusAksi === 'NOTULEN')?.lampiranUrl;
+            return (
+              <div className="flex flex-col gap-2 shrink-0 w-full md:w-auto">
+                {primaryAttachmentUrl ? (
+                  <button 
+                    onClick={() => setPreviewUrl(primaryAttachmentUrl)}
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors w-full"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                    Lihat Lampiran
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-50 text-slate-400 rounded-lg text-xs font-bold w-full cursor-not-allowed">
+                    <Paperclip className="w-4 h-4" />
+                    Tidak Ada Lampiran
+                  </div>
+                )}
+                {notulenUrl && (
+                  <button 
+                    onClick={() => setPreviewUrl(notulenUrl)}
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition-colors w-full border border-blue-200"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                    Lihat Notulen
+                  </button>
+                )}
               </div>
             );
           })()}
@@ -342,6 +380,18 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
                     + Tambah Draft Lampiran
                   </button>
                 )}
+
+                <div className="p-3 lg:p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                      Upload Notulen (Opsional)
+                    </label>
+                  </div>
+                  <input type="file" accept=".pdf,.doc,.docx" onChange={handleNotulenFileInput} className="text-[11px] lg:text-xs w-full file:mr-2 lg:file:mr-3 file:py-1.5 file:px-2 lg:file:px-3 file:rounded file:border-0 file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200" />
+                  <p className="text-[10px] text-slate-400">
+                    {notulenFile ? notulenFile.name : "PDF/Word (Max 5MB)"}
+                  </p>
+                </div>
               </>
             )}
           </div>

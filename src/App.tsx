@@ -361,6 +361,26 @@ export default function App() {
       };
 
       await addDisposisi(payload);
+      
+      if (actionData.notulenFileData) {
+        const notulenPayload = {
+          id: `DSP-NOTULEN-${Date.now()}`,
+          suratId: actionData.suratId,
+          dariUser: currentUser,
+          keUser: currentUser,
+          instruksi: "Lampiran Notulen",
+          catatanTambahan: '',
+          statusAksi: "NOTULEN",
+          fileName: actionData.notulenFile ? actionData.notulenFile.name : '',
+          mimeType: actionData.notulenFile ? actionData.notulenFile.type : '',
+          fileData: actionData.notulenFileData || '',
+          statusSuratBaru: actionData.statusSuratBaru,
+          keUserRoleBaru: keUserRole,
+          timestamp: new Date().toISOString()
+        };
+        await addDisposisi(notulenPayload);
+      }
+      
       await loadData();
       
       if (actionData.statusSuratBaru === 'SELESAI') {

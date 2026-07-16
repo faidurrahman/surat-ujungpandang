@@ -31,6 +31,7 @@ export interface SuratMasuk {
   kategori: KategoriSurat;
   status: StatusSurat;
   lampiranUrl?: string;
+  notulenUrl?: string;
   currentHandlerRole: Role;
   lastActionDate: string;
 }
