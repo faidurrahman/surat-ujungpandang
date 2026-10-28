@@ -451,7 +451,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-full bg-slate-50/70 font-sans text-slate-800 overflow-hidden">
+    <div className="flex flex-col min-h-screen w-full bg-slate-50/70 font-sans text-slate-800">
       {/* Mobile Off-canvas Drawer (hidden on lg:) */}
       <Sidebar 
         activeTab={activeTab} 
@@ -460,37 +460,34 @@ export default function App() {
         setIsOpen={setIsSidebarOpen}
       />
       
-      {/* Unified Seamless Header Container (Top Navbar + Hero Banner) */}
-      <header className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-950 text-white relative shadow-md shrink-0 overflow-hidden">
-        {/* Continuous Network Constellation Geometric SVG Lines */}
-        <NetworkBackground className="opacity-15 pointer-events-none" />
+      {/* Horizontal Top Navigation Bar (Sticky top-0 z-50) */}
+      <TopNavbar 
+        activeTab={activeTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setIsSidebarOpen(false);
+          if (!['masuk', 'disposisi', 'arsip'].includes(tab)) setSelectedLetterId(null);
+        }}
+        onOpenMobileMenu={() => setIsSidebarOpen(true)}
+        onLogout={handleLogout}
+        isLoading={isLoading}
+      />
 
-        {/* Horizontal Top Navigation Bar with subtle border-b border-white/15 */}
-        <TopNavbar 
-          activeTab={activeTab}
-          setActiveTab={(tab) => {
-            setActiveTab(tab);
-            setIsSidebarOpen(false);
-            if (!['masuk', 'disposisi', 'arsip'].includes(tab)) setSelectedLetterId(null);
-          }}
-          onOpenMobileMenu={() => setIsSidebarOpen(true)}
-          onLogout={handleLogout}
-          isLoading={isLoading}
-        />
-
-        {/* Hero Banner (100% full width, seamlessly attached below Navbar, no outer rounding/shadows, no white gaps) */}
-        {activeTab === 'dashboard' && (
+      {/* Hero Banner (100% full width, seamlessly attached below Navbar, scrolls naturally with the page) */}
+      {activeTab === 'dashboard' && (
+        <section className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-950 text-white relative shrink-0 overflow-hidden">
+          <NetworkBackground className="opacity-15 pointer-events-none" />
           <HeroBanner />
-        )}
-      </header>
+        </section>
+      )}
 
-      <main className="flex-1 flex flex-col min-w-0 w-full overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 w-full">
         {activeTab === 'dashboard' ? (
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-8 flex-1 overflow-y-auto">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-12">
             <DashboardTracking suratList={suratList} onSelectSurat={handleSelectSurat} />
           </div>
         ) : (
-          <div className="p-3 sm:p-5 lg:p-6 flex gap-4 lg:gap-6 flex-1 overflow-hidden w-full max-w-7xl mx-auto">
+          <div className="p-3 sm:p-5 lg:p-6 flex gap-4 lg:gap-6 flex-1 min-h-[calc(100vh-5rem)] lg:h-[calc(100vh-5rem)] w-full max-w-7xl mx-auto">
             {activeTab === 'keluar' ? (
             <div className="flex flex-col h-full w-full overflow-hidden gap-5">
               <div className="bg-white p-5 lg:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row md:items-end gap-4 shrink-0">

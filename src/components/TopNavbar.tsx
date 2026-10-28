@@ -28,7 +28,7 @@ export function TopNavbar({
   ];
 
   return (
-    <nav className="w-full relative z-20 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-950 border-b border-white/10 shadow-lg shadow-blue-950/40">
+    <nav className="w-full sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-950 border-b border-white/10 shadow-lg shadow-blue-950/40">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <NetworkBackground className="opacity-15" />
       </div>
