@@ -480,10 +480,7 @@ export default function App() {
 
         {/* Hero Banner (100% full width, seamlessly attached below Navbar, no outer rounding/shadows, no white gaps) */}
         {activeTab === 'dashboard' && (
-          <HeroBanner 
-            suratList={suratList} 
-            onSelectSurat={handleSelectSurat} 
-          />
+          <HeroBanner />
         )}
       </header>
 
