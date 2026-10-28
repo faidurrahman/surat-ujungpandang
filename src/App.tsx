@@ -10,6 +10,8 @@ import { AddSuratKeluarModal } from './components/AddSuratKeluarModal';
 import { SuratMasuk, Disposisi, SuratKeluar } from './types';
 import { fetchSuratMasuk, fetchDisposisi, fetchSuratKeluar, addSuratMasuk, addDisposisi, addSuratKeluar } from './api';
 import { SuratKeluarList } from './components/SuratKeluarList';
+import { MakassarLogo } from './components/MakassarLogo';
+import { NetworkBackground } from './components/NetworkBackground';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -396,47 +398,49 @@ export default function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8" />
+      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-950 flex items-center justify-center p-4 relative overflow-hidden">
+        <NetworkBackground className="opacity-15" />
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 border border-white/20 relative z-10 animate-in fade-in zoom-in-95 duration-300">
+          <div className="text-center mb-6">
+            <div className="flex justify-center mb-3">
+              <MakassarLogo className="w-16 h-16" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-800">Sistem Persuratan</h1>
-            <p className="text-sm text-slate-500 mt-2">Kecamatan Ujung Pandang</p>
+            <h1 className="text-2xl font-extrabold text-blue-950 tracking-tight">E-PERSURATAN</h1>
+            <p className="text-xs text-blue-800 font-bold uppercase tracking-wider mt-1">Kecamatan Ujung Pandang</p>
+            <p className="text-[11px] text-slate-400 mt-1">Kota Makassar · Silakan masuk dengan akun resmi</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wide mb-2">Username</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Username</label>
               <input 
                 type="text" 
                 value={loginUsername}
                 onChange={(e) => setLoginUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                 placeholder="Masukkan username"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wide mb-2">Password</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Password</label>
               <input 
                 type="password" 
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                 placeholder="Masukkan password"
               />
             </div>
 
             {loginError && (
-              <p className="text-red-500 text-sm font-medium text-center bg-red-50 py-2 rounded-lg">{loginError}</p>
+              <p className="text-rose-600 text-xs font-semibold text-center bg-rose-50 border border-rose-200 py-2 rounded-xl">{loginError}</p>
             )}
 
             <button 
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors shadow-sm"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-sm hover:shadow active:scale-[0.99] mt-2 text-sm"
             >
-              Masuk
+              Masuk ke Sistem
             </button>
           </form>
         </div>
@@ -445,7 +449,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 font-sans text-slate-800 overflow-hidden">
+    <div className="flex h-screen w-full bg-slate-50/70 font-sans text-slate-800 overflow-hidden">
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={(tab) => { setActiveTab(tab); setIsSidebarOpen(false); if (!['masuk', 'disposisi', 'arsip'].includes(tab)) setSelectedLetterId(null); }} 
@@ -453,102 +457,130 @@ export default function App() {
         setIsOpen={setIsSidebarOpen}
       />
       
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 w-full overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 shrink-0">
+        <header className="h-16 bg-white border-b border-slate-200/80 flex items-center justify-between px-3 sm:px-4 lg:px-8 shrink-0">
           <div className="flex items-center gap-2">
             <button 
-              className="lg:hidden p-2 -ml-2 text-slate-500 hover:text-slate-800"
+              className="lg:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors"
               onClick={() => setIsSidebarOpen(true)}
+              aria-label="Buka Menu"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <span className="hidden sm:inline text-slate-400 text-sm">Beranda</span>
-            <span className="hidden sm:inline text-slate-300 text-sm">/</span>
-            <span className="text-slate-800 font-medium text-sm truncate max-w-[150px] sm:max-w-none">
-              {activeTab === 'dashboard' ? 'Dashboard & Tracking' : 'Persuratan'}
+            <span className="hidden sm:inline text-slate-400 text-xs font-semibold">Beranda</span>
+            <span className="hidden sm:inline text-slate-300 text-xs">/</span>
+            <span className="text-blue-950 font-bold text-sm truncate max-w-[150px] sm:max-w-none">
+              {activeTab === 'dashboard' ? 'Dashboard & Tracking' : 
+               activeTab === 'masuk' ? 'Surat Masuk' :
+               activeTab === 'keluar' ? 'Surat Keluar' :
+               activeTab === 'disposisi' ? 'Disposisi Aktif' :
+               activeTab === 'arsip' ? 'Arsip Selesai' : 'Persuratan'}
             </span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            {isLoading && <span className="text-xs text-blue-600 animate-pulse font-medium">Sinkronisasi...</span>}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {isLoading && (
+              <span className="text-xs text-blue-600 animate-pulse font-bold bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+                Sinkronisasi...
+              </span>
+            )}
             <div className="relative hidden sm:block">
-              <input type="text" placeholder="Cari agenda/nomor surat..." className="pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:ring-2 focus:ring-blue-500 rounded-lg text-sm w-48 lg:w-64 outline-none transition-colors" />
-              <Search className="w-5 h-5 absolute left-3 top-2.5 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Cari agenda / nomor surat..." 
+                className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 w-48 lg:w-64 transition-all" 
+              />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             </div>
-            <button className="sm:hidden p-2 text-slate-400 hover:text-blue-600">
+            <button className="sm:hidden p-2 text-slate-500 hover:text-blue-600 rounded-lg hover:bg-slate-100 transition-colors">
               <Search className="w-5 h-5" />
-            </button>
-            <button className="p-2 text-slate-400 hover:text-blue-600 relative">
-              <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
             <button 
               onClick={handleLogout}
-              className="p-2 text-slate-400 hover:text-red-600 transition-colors"
-              title="Logout"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-200 hover:border-rose-200 transition-colors"
+              title="Keluar dari sistem"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </header>
 
         {/* Content Grid */}
-        <div className="p-4 lg:p-8 flex gap-6 flex-1 overflow-hidden">
+        <div className="p-3 sm:p-4 lg:p-6 flex gap-4 lg:gap-6 flex-1 overflow-hidden w-full">
           {activeTab === 'dashboard' ? (
             <DashboardTracking suratList={suratList} onSelectSurat={handleSelectSurat} />
           ) : activeTab === 'keluar' ? (
-            <div className="flex flex-col h-full w-full overflow-hidden gap-6">
-              <div className="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-end gap-4 shrink-0">
+            <div className="flex flex-col h-full w-full overflow-hidden gap-5">
+              <div className="bg-white p-5 lg:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row md:items-end gap-4 shrink-0">
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Dari Tanggal</label>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Dari Tanggal</label>
                     <div className="relative">
-                      <input type="date" value={keluarStartDate} onChange={e => setKeluarStartDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
-                      <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                      <input 
+                        type="date" 
+                        value={keluarStartDate} 
+                        onChange={e => setKeluarStartDate(e.target.value)} 
+                        className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all" 
+                      />
+                      <Calendar className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Sampai Tanggal</label>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Sampai Tanggal</label>
                     <div className="relative">
-                      <input type="date" value={keluarEndDate} onChange={e => setKeluarEndDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
-                      <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                      <input 
+                        type="date" 
+                        value={keluarEndDate} 
+                        onChange={e => setKeluarEndDate(e.target.value)} 
+                        className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all" 
+                      />
+                      <Calendar className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-3 w-full md:w-auto mt-2 md:mt-0">
-                  <button onClick={handleFilterKeluar} className="flex-1 md:flex-none px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+                <div className="flex flex-wrap gap-2.5 w-full md:w-auto mt-2 md:mt-0">
+                  <button 
+                    onClick={handleFilterKeluar} 
+                    className="flex-1 md:flex-none px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs hover:shadow"
+                  >
                     Tampilkan
                   </button>
-                  <button onClick={handleResetKeluar} className="flex-1 md:flex-none px-5 py-2 border border-slate-300 hover:bg-slate-50 text-slate-600 text-sm font-bold rounded-lg transition-colors">
+                  <button 
+                    onClick={handleResetKeluar} 
+                    className="flex-1 md:flex-none px-5 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl transition-colors"
+                  >
                     Reset
                   </button>
                   <button 
                     onClick={() => setIsAddKeluarModalOpen(true)}
-                    className="flex-1 md:flex-none px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+                    className="flex-1 md:flex-none px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs hover:shadow"
+                  >
                     + Buat Baru
                   </button>
                 </div>
               </div>
+
               {filteredKeluar === null ? (
-                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
-                  <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                    <FileText className="w-8 h-8 text-blue-500" />
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-4 text-blue-600">
+                    <FileText className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-2">Pencarian Surat Keluar</h3>
-                  <p className="text-slate-500 max-w-md text-sm">Silakan pilih rentang tanggal untuk menampilkan data surat keluar.</p>
+                  <h3 className="text-base font-bold text-slate-800 mb-1">Pencarian Surat Keluar</h3>
+                  <p className="text-slate-500 max-w-md text-xs">Silakan pilih rentang tanggal untuk menampilkan data surat keluar.</p>
                 </div>
               ) : filteredKeluar?.length === 0 ? (
-                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
-                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                    <FileText className="w-8 h-8 text-slate-400" />
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4 text-slate-400">
+                    <FileText className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-2">Surat Keluar Tidak Ditemukan</h3>
-                  <p className="text-slate-500 max-w-md text-sm">Tidak ada surat keluar yang ditemukan pada rentang tanggal tersebut.</p>
+                  <h3 className="text-base font-bold text-slate-800 mb-1">Surat Keluar Tidak Ditemukan</h3>
+                  <p className="text-slate-500 max-w-md text-xs">Tidak ada surat keluar yang ditemukan pada rentang tanggal tersebut.</p>
                 </div>
               ) : (
                 <div className="flex flex-1 overflow-hidden min-h-0 justify-center">
-                  <div className="w-full max-w-5xl h-full">
+                  <div className="w-full h-full">
                     <SuratKeluarList
                       suratKeluar={filteredKeluar}
                       onAddClick={() => setIsAddKeluarModalOpen(true)}
@@ -558,30 +590,46 @@ export default function App() {
               )}
             </div>
           ) : ['masuk', 'disposisi', 'arsip'].includes(activeTab) ? (
-            <div className="flex flex-col h-full w-full overflow-hidden gap-6">
+            <div className="flex flex-col h-full w-full overflow-hidden gap-5">
               {activeTab === 'arsip' && (
-                <div className="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-end gap-4 shrink-0">
+                <div className="bg-white p-5 lg:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row md:items-end gap-4 shrink-0">
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Dari Tanggal</label>
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Dari Tanggal</label>
                       <div className="relative">
-                        <input type="date" value={arsipStartDate} onChange={e => setArsipStartDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
-                        <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                        <input 
+                          type="date" 
+                          value={arsipStartDate} 
+                          onChange={e => setArsipStartDate(e.target.value)} 
+                          className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all" 
+                        />
+                        <Calendar className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Sampai Tanggal</label>
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Sampai Tanggal</label>
                       <div className="relative">
-                        <input type="date" value={arsipEndDate} onChange={e => setArsipEndDate(e.target.value)} className="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 transition-colors" />
-                        <Calendar className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                        <input 
+                          type="date" 
+                          value={arsipEndDate} 
+                          onChange={e => setArsipEndDate(e.target.value)} 
+                          className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all" 
+                        />
+                        <Calendar className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-3 w-full md:w-auto mt-2 md:mt-0">
-                    <button onClick={handleFilterArsip} className="flex-1 md:flex-none px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+                  <div className="flex gap-2.5 w-full md:w-auto mt-2 md:mt-0">
+                    <button 
+                      onClick={handleFilterArsip} 
+                      className="flex-1 md:flex-none px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs hover:shadow"
+                    >
                       Tampilkan Arsip
                     </button>
-                    <button onClick={handleResetArsip} className="flex-1 md:flex-none px-5 py-2 border border-slate-300 hover:bg-slate-50 text-slate-600 text-sm font-bold rounded-lg transition-colors">
+                    <button 
+                      onClick={handleResetArsip} 
+                      className="flex-1 md:flex-none px-5 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl transition-colors"
+                    >
                       Reset
                     </button>
                   </div>
@@ -589,20 +637,20 @@ export default function App() {
               )}
 
               {activeTab === 'arsip' && filteredArsip === null ? (
-                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
-                  <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                    <Archive className="w-8 h-8 text-blue-500" />
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-4 text-blue-600">
+                    <Archive className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-2">Pencarian Arsip</h3>
-                  <p className="text-slate-500 max-w-md text-sm">Silakan pilih rentang tanggal untuk menampilkan data arsip.</p>
+                  <h3 className="text-base font-bold text-slate-800 mb-1">Pencarian Arsip Dokumen</h3>
+                  <p className="text-slate-500 max-w-md text-xs">Silakan pilih rentang tanggal untuk menampilkan data arsip yang telah selesai.</p>
                 </div>
               ) : activeTab === 'arsip' && filteredArsip?.length === 0 ? (
-                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-0">
-                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                    <Archive className="w-8 h-8 text-slate-400" />
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8 text-center min-h-0">
+                  <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4 text-slate-400">
+                    <Archive className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-2">Arsip Tidak Ditemukan</h3>
-                  <p className="text-slate-500 max-w-md text-sm">Tidak ada arsip yang ditemukan pada rentang tanggal tersebut.</p>
+                  <h3 className="text-base font-bold text-slate-800 mb-1">Arsip Tidak Ditemukan</h3>
+                  <p className="text-slate-500 max-w-md text-xs">Tidak ada dokumen arsip yang ditemukan pada rentang tanggal tersebut.</p>
                 </div>
               ) : (
                 <div className="flex flex-1 gap-6 overflow-hidden min-h-0">
@@ -630,8 +678,10 @@ export default function App() {
                         onAction={handleAction}
                       />
                     ) : (
-                      <div className="flex-1 flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm text-slate-400 font-medium">
-                        Pilih surat untuk melihat detail
+                      <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200/80 shadow-sm text-slate-400 p-8 text-center">
+                        <FileText className="w-12 h-12 text-slate-200 mb-3" />
+                        <p className="text-sm font-bold text-slate-600">Pilih Surat untuk Melihat Detail</p>
+                        <p className="text-xs text-slate-400 mt-1 max-w-xs">Klik salah satu surat pada daftar di sebelah kiri untuk melihat riwayat disposisi.</p>
                       </div>
                     )}
                   </div>
@@ -639,12 +689,12 @@ export default function App() {
               )}
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm flex-col w-full h-full">
-              <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4">
-                <span className="text-slate-400 font-bold">UI</span>
+            <div className="flex-1 flex items-center justify-center bg-white rounded-2xl border border-slate-200/80 shadow-sm flex-col w-full h-full p-8 text-center">
+              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                <FileText className="w-8 h-8" />
               </div>
-              <h2 className="text-xl font-bold text-slate-700">Halaman {activeTab}</h2>
-              <p className="text-slate-500 mt-2 text-sm text-center px-4">Dalam tahap pengembangan prototipe.</p>
+              <h2 className="text-lg font-bold text-slate-800">Halaman {activeTab}</h2>
+              <p className="text-slate-400 mt-1 text-xs">Dalam tahap pengembangan.</p>
             </div>
           )}
         </div>

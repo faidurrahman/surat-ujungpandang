@@ -2,7 +2,7 @@ import { SuratMasuk, Disposisi, User } from './types';
 
 export const currentUser: User = {
   id: 'u5',
-  name: 'Hafsah Sari',
+  name: 'Nia',
   nip: '198802142010021004',
   role: 'ADMIN',
   jabatan: 'Admin Persuratan'
@@ -13,7 +13,7 @@ export const users: User[] = [
   { id: 'u2', name: 'Nanin Sudiar, A.P', nip: '19760625 199412 2 001', role: 'CAMAT', jabatan: 'Camat' },
   { id: 'u3', name: 'Andi Pratama, S.STP', nip: '198506152008011003', role: 'KASUBAG', jabatan: 'Kasubag Umum & Kepegawaian' },
   { id: 'u4', name: 'Rini Wulandari, S.Kom', nip: '199211202019022005', role: 'STAF', jabatan: 'Staf Pelaksana Administrasi' },
-  { id: 'u5', name: 'Hafsah Sari', nip: '198802142010021004', role: 'ADMIN', jabatan: 'Admin Persuratan' },
+  { id: 'u5', name: 'Nia', nip: '198802142010021004', role: 'ADMIN', jabatan: 'Admin Persuratan' },
   { id: 'u6', name: 'Ir. Ahmad Zaelani', nip: '197005111999031002', role: 'SEKCAM', jabatan: 'Sekretaris Camat' },
   { id: 'u7', name: 'Dewi Sartika, S.IP', nip: '198207182006042003', role: 'KASI', jabatan: 'Kasi Pemerintahan' }
 ];

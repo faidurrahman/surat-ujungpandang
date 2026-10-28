@@ -66,26 +66,29 @@ export function AddSuratKeluarModal({ isOpen, onClose, onSave }: AddSuratKeluarM
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-6 bg-slate-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-200">
-        <div className="p-5 lg:p-6 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between shrink-0">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-6 bg-slate-900/50 backdrop-blur-xs">
+      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-200/80 animate-in fade-in zoom-in-95 duration-200">
+        
+        {/* Header */}
+        <div className="p-5 lg:p-6 border-b border-slate-200/80 bg-blue-50/50 text-blue-950 flex items-center justify-between shrink-0">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">Buat Surat Keluar Baru</h2>
-            <p className="text-xs text-slate-500 mt-1 font-medium">Isi form untuk membuat draft surat keluar.</p>
+            <h2 className="text-lg font-bold text-blue-950">Buat Surat Keluar Baru</h2>
+            <p className="text-xs text-blue-800/70 mt-0.5 font-medium">Isi formulir untuk membuat draft surat keluar.</p>
           </div>
           <button 
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-white/80 rounded-xl transition-colors"
+            aria-label="Tutup"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 lg:p-6">
-          <div className="space-y-6">
+          <div className="space-y-5">
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">Nomor Surat (Jika ada)</label>
                 <input 
                   type="text" 
@@ -93,22 +96,22 @@ export function AddSuratKeluarModal({ isOpen, onClose, onSave }: AddSuratKeluarM
                   value={formData.nomorSurat}
                   onChange={handleChange}
                   placeholder="Kosongkan jika masih draft"
-                  className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-mono"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">Tanggal Draft</label>
                 <input 
                   type="date" 
                   name="tanggalDraft"
                   value={formData.tanggalDraft}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">Perihal</label>
               <textarea 
                 name="perihal"
@@ -116,17 +119,17 @@ export function AddSuratKeluarModal({ isOpen, onClose, onSave }: AddSuratKeluarM
                 onChange={handleChange}
                 rows={3}
                 placeholder="Tuliskan perihal surat keluar..."
-                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors resize-none"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all resize-none"
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">Status Awal</label>
               <select 
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors appearance-none"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
               >
                 <option value="DRAFT">DRAFT</option>
                 <option value="MENUNGGU_APPROVAL">MENUNGGU APPROVAL</option>
@@ -135,12 +138,12 @@ export function AddSuratKeluarModal({ isOpen, onClose, onSave }: AddSuratKeluarM
               </select>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">Upload Draft Surat (Opsional)</label>
               <div 
                 className={cn(
-                  "relative border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center transition-colors",
-                  dragActive ? "border-blue-500 bg-blue-50" : "border-slate-300 bg-slate-50 hover:bg-slate-100"
+                  "relative border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all",
+                  dragActive ? "border-blue-500 bg-blue-50/50" : "border-slate-200 bg-slate-50 hover:bg-slate-100/70"
                 )}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -153,14 +156,14 @@ export function AddSuratKeluarModal({ isOpen, onClose, onSave }: AddSuratKeluarM
                   onChange={handleFileInput}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-4">
-                  {file ? <FileText className="w-6 h-6 text-blue-500" /> : <UploadCloud className="w-6 h-6 text-blue-500" />}
+                <div className="w-12 h-12 bg-white rounded-xl shadow-xs border border-slate-200 flex items-center justify-center mb-3 text-blue-600">
+                  {file ? <FileText className="w-6 h-6" /> : <UploadCloud className="w-6 h-6" />}
                 </div>
-                <p className="text-sm font-bold text-slate-700 mb-1">
-                  {file ? file.name : "Drag & drop file di sini, atau klik untuk browse"}
+                <p className="text-sm font-bold text-slate-800 mb-1">
+                  {file ? file.name : "Tarik & letakkan berkas di sini, atau klik untuk memilih"}
                 </p>
-                <p className="text-xs text-slate-500">
-                  {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "Mendukung PDF, DOC, DOCX (Max. 10MB)"}
+                <p className="text-xs text-slate-400">
+                  {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "Format: PDF, DOC, DOCX (Maksimal 10MB)"}
                 </p>
               </div>
             </div>
@@ -168,10 +171,10 @@ export function AddSuratKeluarModal({ isOpen, onClose, onSave }: AddSuratKeluarM
           </div>
         </div>
 
-        <div className="p-5 lg:p-6 border-t border-slate-200 bg-white flex gap-3 shrink-0">
+        <div className="p-5 lg:p-6 border-t border-slate-200/80 bg-slate-50/50 flex gap-3 shrink-0">
           <button 
             onClick={onClose}
-            className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 font-bold text-sm rounded-lg hover:bg-slate-50 transition-colors"
+            className="flex-1 px-4 py-2.5 border border-slate-300 text-slate-700 font-bold text-sm rounded-xl hover:bg-white transition-colors"
           >
             Batal
           </button>
@@ -180,7 +183,7 @@ export function AddSuratKeluarModal({ isOpen, onClose, onSave }: AddSuratKeluarM
               onSave({ ...formData, file, fileData });
               onClose();
             }}
-            className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold text-sm rounded-lg hover:bg-blue-700 shadow-sm transition-colors"
+            className="flex-1 px-4 py-2.5 bg-blue-600 text-white font-bold text-sm rounded-xl hover:bg-blue-700 shadow-sm transition-colors"
           >
             Simpan Draft
           </button>

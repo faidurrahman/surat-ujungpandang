@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { Send, CheckCircle, Clock, Users, Paperclip, ArrowLeft, X } from 'lucide-react';
+import { Send, CheckCircle, Clock, Users, Paperclip, ArrowLeft, X, ExternalLink } from 'lucide-react';
 import { SuratMasuk, Disposisi, User } from '../types';
 import { cn } from '../utils';
 
@@ -129,35 +129,37 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
   return (
     <div className="flex-1 flex flex-col gap-4 lg:gap-6 min-w-0 overflow-hidden h-full">
       {/* Header Info Card */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 lg:p-6 shrink-0">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 lg:p-6 shrink-0">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
           <div className="flex-1 min-w-0">
             {onBack && (
               <button 
                 onClick={onBack}
-                className="lg:hidden mb-4 flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors bg-slate-100 px-3 py-1.5 rounded-full w-fit"
+                className="lg:hidden mb-3 flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 transition-colors bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200/60 w-fit"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Kembali ke Daftar
               </button>
             )}
             <div className="flex flex-wrap items-center gap-2 lg:gap-3 mb-2">
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-slate-100 text-slate-600 whitespace-nowrap">
+              <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap">
                 {surat.sifat}
               </span>
-              <span className="text-xs font-mono font-bold text-slate-500 truncate">{surat.nomorSurat}</span>
+              <span className="text-xs font-mono font-bold text-blue-950 truncate">
+                {surat.nomorSurat}
+              </span>
             </div>
-            <h1 className="text-lg lg:text-xl font-bold text-slate-900 leading-tight mb-3">
+            <h1 className="text-lg lg:text-xl font-bold text-slate-900 leading-tight mb-2">
               {surat.perihal}
             </h1>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-[11px] text-slate-500 font-bold uppercase tracking-wide">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-slate-500 font-medium">
               <div className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Pengirim: <span className="text-slate-700">{surat.pengirim}</span></span>
+                <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="truncate">Pengirim: <strong className="text-slate-800">{surat.pengirim}</strong></span>
               </div>
               <div className="hidden sm:block w-1 h-1 bg-slate-300 rounded-full" />
               <div className="flex items-center gap-1.5 shrink-0">
-                <Clock className="w-3.5 h-3.5" />
+                <Clock className="w-3.5 h-3.5 text-slate-400" />
                 <span>Diterima: {format(new Date(surat.tanggalDiterima), 'dd MMM yyyy • HH:mm', { locale: localeId })}</span>
               </div>
             </div>
@@ -170,13 +172,13 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
                 {primaryAttachmentUrl ? (
                   <button 
                     onClick={() => setPreviewUrl(primaryAttachmentUrl)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors w-full"
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors w-full shadow-xs"
                   >
                     <Paperclip className="w-4 h-4" />
-                    Lihat Lampiran
+                    Lihat Lampiran Fisik
                   </button>
                 ) : (
-                  <div className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-50 text-slate-400 rounded-lg text-xs font-bold w-full cursor-not-allowed">
+                  <div className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-xs font-semibold w-full cursor-not-allowed">
                     <Paperclip className="w-4 h-4" />
                     Tidak Ada Lampiran
                   </div>
@@ -184,7 +186,7 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
                 {notulenUrl && (
                   <button 
                     onClick={() => setPreviewUrl(notulenUrl)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition-colors w-full border border-blue-200"
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold transition-colors w-full border border-blue-200"
                   >
                     <Paperclip className="w-4 h-4" />
                     Lihat Notulen
@@ -199,13 +201,18 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 overflow-y-auto lg:overflow-hidden">
         {/* Timeline Audit Trail */}
-        <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-[300px] lg:min-h-0 lg:overflow-hidden shrink-0 lg:shrink">
-          <div className="p-4 bg-slate-900 text-white shrink-0">
-            <p className="text-[10px] font-bold opacity-60 uppercase mb-1">Tracking Surat</p>
-            <p className="text-sm font-bold truncate">{surat.nomorSurat}</p>
+        <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col min-h-[300px] lg:min-h-0 lg:overflow-hidden shrink-0 lg:shrink">
+          <div className="p-4 bg-gradient-to-r from-blue-900 via-indigo-900 to-indigo-950 text-white shrink-0 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold text-blue-200 uppercase tracking-wider mb-0.5">Tracking Riwayat Disposisi</p>
+              <p className="text-sm font-bold font-mono truncate">{surat.nomorSurat}</p>
+            </div>
+            <span className="text-[10px] font-bold bg-white/10 px-2.5 py-1 rounded-full text-blue-100 border border-white/20">
+              {disposisiHistory.length} Langkah
+            </span>
           </div>
-          <div className="flex-1 p-4 lg:p-6 overflow-y-auto relative">
-            <div className="absolute left-6 lg:left-8 top-6 lg:top-8 bottom-8 w-0.5 bg-slate-100"></div>
+          <div className="flex-1 p-5 lg:p-6 overflow-y-auto relative">
+            <div className="absolute left-7 lg:left-9 top-6 lg:top-8 bottom-8 w-0.5 bg-blue-100"></div>
             
             <div className="space-y-6">
               {disposisiHistory.map((disp, index) => {
@@ -214,43 +221,43 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
                   <div key={disp.id} className="relative pl-8 lg:pl-10 flex gap-3">
                     <div className={cn(
                       "absolute left-0 w-4 h-4 rounded-full border-4 z-10 -ml-[7px] lg:-ml-[7px]",
-                      isLast ? "bg-blue-500 border-blue-100" : "bg-emerald-500 border-white"
+                      isLast ? "bg-blue-600 border-blue-100" : "bg-emerald-500 border-white shadow-xs"
                     )} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <p className={cn("text-xs font-bold break-words", isLast ? "text-blue-600" : "text-slate-900")}>
+                        <p className={cn("text-xs font-bold break-words", isLast ? "text-blue-700" : "text-slate-900")}>
                           {disp.statusAksi}
                         </p>
                         {disp.lampiranUrl && (
                           <button 
                             onClick={() => setPreviewUrl(disp.lampiranUrl)}
-                            className="flex items-center gap-1.5 text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-100 hover:bg-orange-100 transition-colors shrink-0"
+                            className="flex items-center gap-1.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors shrink-0"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                            <Paperclip className="w-3 h-3 text-blue-600" />
                             Bukti Serah Terima
                           </button>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5 truncate">
-                        Oleh: {disp.dariUser?.name || 'Sistem'} <span className="hidden sm:inline">({disp.dariUser?.jabatan || '-'})</span>
+                      <p className="text-xs text-slate-500 mt-0.5 truncate">
+                        Oleh: <strong className="text-slate-700">{disp.dariUser?.name || 'Sistem'}</strong> <span className="hidden sm:inline text-slate-400">({disp.dariUser?.jabatan || '-'})</span>
                       </p>
-                      <div className="mt-2 p-3 bg-slate-50 rounded border border-slate-100">
+                      <div className="mt-2 p-3.5 bg-slate-50/80 rounded-xl border border-slate-200/80">
                         <p className="text-xs text-slate-700 italic leading-relaxed break-words">"{disp.instruksi}"</p>
                         {disp.catatanTambahan && (
                           <div className="mt-2 pt-2 border-t border-slate-200">
-                            <p className="text-[11px] text-slate-500 font-medium break-words">Catatan: {disp.catatanTambahan}</p>
+                            <p className="text-xs text-slate-500 font-medium break-words">Catatan: {disp.catatanTambahan}</p>
                           </div>
                         )}
                         {disp.keUser && (
-                           <div className="mt-2 pt-2 border-t border-slate-200 flex items-center gap-1.5 text-[11px] font-bold text-slate-600 flex-wrap">
-                             <Send className="w-3 h-3 text-blue-500 shrink-0" />
-                             <span className="shrink-0">Diteruskan ke:</span> <span className="text-blue-700 truncate">{disp.keUser.name || 'Sistem'}</span>
+                           <div className="mt-2 pt-2 border-t border-slate-200 flex items-center gap-1.5 text-xs font-bold text-slate-600 flex-wrap">
+                             <Send className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                             <span className="shrink-0">Diteruskan ke:</span> <span className="text-blue-800 truncate">{disp.keUser.name || 'Sistem'}</span>
                            </div>
                         )}
                       </div>
                       <p className={cn(
                         "text-[10px] mt-2 uppercase font-bold tracking-tight",
-                        isLast ? "text-blue-400" : "text-slate-400"
+                        isLast ? "text-blue-600" : "text-slate-400"
                       )}>
                         {disp.timestamp ? format(new Date(disp.timestamp), 'dd MMM yyyy • HH:mm', { locale: localeId }) : '-'}
                       </p>
@@ -260,11 +267,11 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
               })}
 
               {surat.status !== 'SELESAI' && surat.currentHandlerRole === currentUser.role && (
-                <div className="relative pl-8 lg:pl-10 flex gap-3 opacity-60">
-                  <div className="absolute left-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white z-10 -ml-[7px] lg:-ml-[7px]" />
+                <div className="relative pl-8 lg:pl-10 flex gap-3 opacity-75">
+                  <div className="absolute left-0 w-4 h-4 rounded-full bg-blue-200 border-4 border-white z-10 -ml-[7px] lg:-ml-[7px]" />
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Menunggu Tindakan Anda</p>
-                    <p className="text-[11px] text-slate-500">Silakan beri instruksi disposisi</p>
+                    <p className="text-xs font-bold text-blue-900">Menunggu Tindakan Anda</p>
+                    <p className="text-[11px] text-slate-500">Silakan beri instruksi disposisi pada formulir</p>
                   </div>
                 </div>
               )}
@@ -273,30 +280,30 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
         </div>
 
         {/* Action Form */}
-        <div className="w-full lg:w-[340px] shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col lg:overflow-hidden">
-          <div className="p-4 bg-slate-50 border-b border-slate-100 shrink-0">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+        <div className="w-full lg:w-[360px] shrink-0 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col lg:overflow-hidden">
+          <div className="p-4 bg-blue-50/50 border-b border-slate-200/80 shrink-0">
+            <h3 className="text-xs font-bold text-blue-950 uppercase tracking-wide flex items-center gap-2">
               <Send className="w-4 h-4 text-blue-600" />
-              Formulir Tindakan
+              Formulir Tindakan Disposisi
             </h3>
           </div>
-          <div className="p-4 lg:p-5 overflow-y-auto flex-1 space-y-4 lg:space-y-5">
+          <div className="p-4 lg:p-5 overflow-y-auto flex-1 space-y-4">
             {surat.status === 'SELESAI' ? (
-              <div className="flex flex-col items-center justify-center py-6 lg:py-8 text-center">
-                <CheckCircle className="w-10 h-10 lg:w-12 lg:h-12 text-emerald-500 mb-3" />
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <CheckCircle className="w-12 h-12 text-emerald-500 mb-3" />
                 <h4 className="text-sm font-bold text-slate-900">Surat Selesai</h4>
-                <p className="text-xs text-slate-500 mt-1">Proses disposisi telah diakhiri.</p>
+                <p className="text-xs text-slate-500 mt-1">Proses disposisi dan tindak lanjut telah diakhiri.</p>
               </div>
             ) : (
               <>
                 {currentUser.role === 'ADMIN' ? (
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">Teruskan Ke</label>
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">Teruskan Ke</label>
                       <select 
                         value={tujuanDisposisi}
                         onChange={(e) => setTujuanDisposisi(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-colors appearance-none"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                       >
                         <option value="">-- Pilih Tujuan --</option>
                         <option value="camat">Camat</option>
@@ -313,49 +320,52 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
                       </select>
                     </div>
                     {tujuanDisposisi === 'staf_pelaksana' && (
-                      <div className="space-y-2">
-                        <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">Nama Staf Pelaksana</label>
+                      <div className="space-y-1.5">
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">Nama Staf Pelaksana</label>
                         <input 
                           type="text" 
                           value={namaStaf}
                           onChange={(e) => setNamaStaf(e.target.value)}
                           placeholder="Masukkan nama staf..." 
-                          className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-colors"
+                          className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                         />
                       </div>
                     )}
                   </div>
                 ) : null}
 
-                <div className="space-y-2">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">
                     {currentUser.role === 'STAF' ? 'Catatan Tindak Lanjut' : 'Instruksi / Catatan'}
                   </label>
                   <textarea 
                     rows={4}
                     value={instruksi}
                     onChange={(e) => setInstruksi(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-colors"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 resize-none transition-all"
                     placeholder={currentUser.role === 'STAF' ? 'Tuliskan hasil tindak lanjut...' : 'Contoh: Tolong pelajari dan siapkan laporan...'}
                   />
                 </div>
                 
                 {currentUser.role === 'ADMIN' ? (
-                  <div className="p-3 lg:p-4 bg-orange-50 rounded-lg border border-orange-200 space-y-3">
-                    <div className="flex justify-between items-center mb-1">
-                      <label className="block text-[11px] font-bold text-orange-700 uppercase tracking-wide">
-                        Wajib Upload: Bukti Serah Terima Fisik
-                      </label>
-                    </div>
-                    <input type="file" accept="image/*" onChange={handleActionFileInput} className="text-[11px] lg:text-xs w-full file:mr-2 lg:file:mr-3 file:py-1.5 file:px-2 lg:file:px-3 file:rounded file:border-0 file:font-bold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200" />
-                    <p className="text-[10px] text-orange-500">
-                      {actionFile ? actionFile.name : "Upload foto fisik surat sudah diserahkan (Max 5MB)"}
+                  <div className="p-4 bg-amber-50/70 rounded-xl border border-amber-200 space-y-2.5">
+                    <label className="block text-xs font-bold text-amber-900 uppercase tracking-wide">
+                      Wajib Upload: Bukti Serah Terima Fisik
+                    </label>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleActionFileInput} 
+                      className="text-xs w-full file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:font-bold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer" 
+                    />
+                    <p className="text-[11px] text-amber-700">
+                      {actionFile ? actionFile.name : "Upload foto bukti serah terima fisik (Max 5MB)"}
                     </p>
                   </div>
                 ) : currentUser.role === 'STAF' || showReplyForm ? (
-                  <div className="p-3 lg:p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5">
                     <div className="flex justify-between items-center mb-1">
-                      <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">
                         Wajib Upload: {
                           surat.kategori === 'Surat Penelitian' ? 'Draft Surat Balasan' :
                           surat.kategori === 'Surat Ijin KKN' ? 'Draft Surat Rekomendasi' :
@@ -367,28 +377,35 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
                         <button onClick={() => setShowReplyForm(false)} className="text-xs font-bold text-slate-400 hover:text-slate-600">Batal</button>
                       )}
                     </div>
-                    <input type="file" onChange={handleActionFileInput} className="text-[11px] lg:text-xs w-full file:mr-2 lg:file:mr-3 file:py-1.5 file:px-2 lg:file:px-3 file:rounded file:border-0 file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200" />
-                    <p className="text-[10px] text-slate-400">
+                    <input 
+                      type="file" 
+                      onChange={handleActionFileInput} 
+                      className="text-xs w-full file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer" 
+                    />
+                    <p className="text-[11px] text-slate-500">
                       {actionFile ? actionFile.name : "PDF/Word (Max 5MB)"}
                     </p>
                   </div>
                 ) : (
                   <button 
                     onClick={() => setShowReplyForm(true)}
-                    className="text-xs text-blue-600 font-bold hover:underline flex items-center gap-1"
+                    className="text-xs text-blue-600 font-bold hover:underline flex items-center gap-1 py-1"
                   >
                     + Tambah Draft Lampiran
                   </button>
                 )}
 
-                <div className="p-3 lg:p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
-                      Upload Notulen (Opsional)
-                    </label>
-                  </div>
-                  <input type="file" accept=".pdf,.doc,.docx" onChange={handleNotulenFileInput} className="text-[11px] lg:text-xs w-full file:mr-2 lg:file:mr-3 file:py-1.5 file:px-2 lg:file:px-3 file:rounded file:border-0 file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200" />
-                  <p className="text-[10px] text-slate-400">
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                    Upload Notulen (Opsional)
+                  </label>
+                  <input 
+                    type="file" 
+                    accept=".pdf,.doc,.docx" 
+                    onChange={handleNotulenFileInput} 
+                    className="text-xs w-full file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:font-bold file:bg-slate-200 file:text-slate-700 hover:file:bg-slate-300 cursor-pointer" 
+                  />
+                  <p className="text-[11px] text-slate-500">
                     {notulenFile ? notulenFile.name : "PDF/Word (Max 5MB)"}
                   </p>
                 </div>
@@ -396,36 +413,36 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
             )}
           </div>
           {surat.status !== 'SELESAI' && (
-            <div className="p-4 bg-slate-50 border-t border-slate-200 shrink-0 flex flex-col gap-3">
+            <div className="p-4 bg-slate-50 border-t border-slate-200/80 shrink-0 flex flex-col gap-2.5">
               <button 
                 onClick={handleKirim} 
                 disabled={isSubmitting}
                 className={cn(
-                  "w-full text-white text-xs font-bold py-2.5 rounded-lg shadow-sm transition-colors uppercase tracking-wide",
+                  "w-full text-white text-xs font-bold py-3 rounded-xl shadow-xs transition-colors uppercase tracking-wide",
                   isSubmitting ? "bg-slate-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
                 )}
               >
                 {isSubmitting ? 'Mengirim...' : 'Kirim Disposisi / Teruskan'}
               </button>
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <button 
                   disabled={isSubmitting}
                   className={cn(
-                    "flex-1 border text-xs font-bold py-2.5 rounded-lg transition-colors uppercase tracking-wide",
+                    "flex-1 border text-xs font-bold py-2.5 rounded-xl transition-colors uppercase tracking-wide",
                     isSubmitting ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed" : "bg-white border-rose-200 text-rose-600 hover:bg-rose-50"
                   )}
                 >
-                  Kembalikan/Revisi
+                  Revisi
                 </button>
                 <button 
                   onClick={handleSelesai} 
                   disabled={isSubmitting}
                   className={cn(
-                    "flex-1 text-white text-xs font-bold py-2.5 rounded-lg shadow-sm transition-colors uppercase tracking-wide",
-                    isSubmitting ? "bg-slate-400 cursor-not-allowed" : "bg-emerald-500 hover:bg-emerald-600"
+                    "flex-1 text-white text-xs font-bold py-2.5 rounded-xl shadow-xs transition-colors uppercase tracking-wide",
+                    isSubmitting ? "bg-slate-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700"
                   )}
                 >
-                  {isSubmitting ? 'Menyelesaikan...' : 'Selesai & Tutup Tiket'}
+                  {isSubmitting ? 'Menyelesaikan...' : 'Selesai'}
                 </button>
               </div>
             </div>
@@ -436,18 +453,22 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
       {/* Lightbox Modal */}
       {previewUrl && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 lg:p-8 transition-opacity"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4 lg:p-8 transition-opacity"
           onClick={() => setPreviewUrl(null)}
         >
           <div 
-            className="relative w-full max-w-5xl h-full max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col"
+            className="relative w-full max-w-5xl h-full max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 border-b border-slate-200 bg-slate-50 shrink-0">
-              <h3 className="font-bold text-slate-700">Preview Lampiran</h3>
+            <div className="flex items-center justify-between p-4 border-b border-slate-200 bg-blue-50/50 text-blue-950 shrink-0">
+              <h3 className="font-bold text-sm text-blue-950 flex items-center gap-2">
+                <Paperclip className="w-4 h-4 text-blue-600" />
+                Preview Lampiran Dokumen
+              </h3>
               <button 
                 onClick={() => setPreviewUrl(null)}
-                className="p-1.5 hover:bg-slate-200 rounded-lg text-slate-500 transition-colors"
+                className="p-1.5 hover:bg-white rounded-xl text-slate-500 hover:text-slate-800 transition-colors"
+                aria-label="Tutup"
               >
                 <X className="w-5 h-5" />
               </button>

@@ -19,21 +19,32 @@ export async function fetchDisposisi() {
     console.log("Raw response from getDisposisi:", text);
     const data = JSON.parse(text);
     
+    const normalizeUser = (u: any) => {
+      if (!u) return u;
+      let target = u;
+      if (typeof target === 'string' && target.startsWith('{')) {
+        try { target = JSON.parse(target); } catch (e) {}
+      }
+      if (target && typeof target === 'object' && target.name && (target.name === 'Hafsah Sari' || target.name.includes('Hafsah'))) {
+        return { ...target, name: 'Nia' };
+      }
+      return target;
+    };
+
     // Auto-fix if the deployed script returns broken data due to column mismatches
     return data.map((row: any) => {
+      let processed = row;
       // If it uses the proper keys already (e.g. they updated their app script to the new one)
       if (row.suratId !== undefined && (!row.timestamp || !row.timestamp.includes || !row.timestamp.includes('{"id"'))) {
-         return row;
-      }
-      
-      // If it's the broken format from their old app script reading new headers:
-      if (row['ID Disposisi'] !== undefined) {
+         processed = row;
+      } else if (row['ID Disposisi'] !== undefined) {
+        // If it's the broken format from their old app script reading new headers:
         let parsedDari = null;
         let parsedKe = null;
         try { parsedDari = JSON.parse(row['Waktu Disposisi'] || '{}'); } catch (e) {}
         try { parsedKe = JSON.parse(row['Dari'] || '{}'); } catch (e) {}
         
-        return {
+        processed = {
           id: row['ID Disposisi'],
           suratId: row['ID Surat'],
           timestamp: row['Link Bukti Serah Terima Fisik'] || new Date().toISOString(),
@@ -43,16 +54,14 @@ export async function fetchDisposisi() {
           statusAksi: row['Link Draft Balasan'] || 'Disposisi',
           lampiranUrl: ''
         };
-      }
-      
-      // If it's the new app script but old data shifted:
-      if (row.timestamp && typeof row.timestamp === 'string' && row.timestamp.includes('{"id"')) {
+      } else if (row.timestamp && typeof row.timestamp === 'string' && row.timestamp.includes('{"id"')) {
+        // If it's the new app script but old data shifted:
         let parsedDari = null;
         let parsedKe = null;
         try { parsedDari = JSON.parse(row.timestamp); } catch (e) {}
         try { parsedKe = JSON.parse(row.dariUser || '{}'); } catch (e) {}
         
-        return {
+        processed = {
           id: row.id,
           suratId: row.suratId,
           timestamp: row.lampiranUrl || new Date().toISOString(), 
@@ -63,7 +72,11 @@ export async function fetchDisposisi() {
           lampiranUrl: '' 
         };
       }
-      return row;
+      return {
+        ...processed,
+        dariUser: normalizeUser(processed.dariUser),
+        keUser: normalizeUser(processed.keUser)
+      };
     });
   } catch (e) {
     console.error("Failed to fetch Disposisi:", e);
