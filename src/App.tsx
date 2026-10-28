@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Bell, Menu, Calendar, Archive, FileText, LogOut } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
+import { TopNavbar } from './components/TopNavbar';
 import { LetterList } from './components/LetterList';
 import { LetterDetail } from './components/LetterDetail';
 import { DashboardTracking } from './components/DashboardTracking';
@@ -12,6 +13,7 @@ import { fetchSuratMasuk, fetchDisposisi, fetchSuratKeluar, addSuratMasuk, addDi
 import { SuratKeluarList } from './components/SuratKeluarList';
 import { MakassarLogo } from './components/MakassarLogo';
 import { NetworkBackground } from './components/NetworkBackground';
+import { HeroBanner } from './components/HeroBanner';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -405,8 +407,8 @@ export default function App() {
             <div className="flex justify-center mb-3">
               <MakassarLogo className="w-16 h-16" />
             </div>
-            <h1 className="text-2xl font-extrabold text-blue-950 tracking-tight">E-PERSURATAN</h1>
-            <p className="text-xs text-blue-800 font-bold uppercase tracking-wider mt-1">Kecamatan Ujung Pandang</p>
+            <h1 className="text-2xl font-bold text-blue-950 tracking-tight">SIMPADU</h1>
+            <p className="text-xs text-blue-800 font-medium tracking-wide mt-1">E-Persuratan Kec. Ujung Pandang</p>
             <p className="text-[11px] text-slate-400 mt-1">Kota Makassar · Silakan masuk dengan akun resmi</p>
           </div>
 
@@ -449,7 +451,8 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-slate-50/70 font-sans text-slate-800 overflow-hidden">
+    <div className="flex flex-col h-screen w-full bg-slate-50/70 font-sans text-slate-800 overflow-hidden">
+      {/* Mobile Off-canvas Drawer (hidden on lg:) */}
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={(tab) => { setActiveTab(tab); setIsSidebarOpen(false); if (!['masuk', 'disposisi', 'arsip'].includes(tab)) setSelectedLetterId(null); }} 
@@ -457,61 +460,41 @@ export default function App() {
         setIsOpen={setIsSidebarOpen}
       />
       
+      {/* Unified Seamless Header Container (Top Navbar + Hero Banner) */}
+      <header className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-950 text-white relative shadow-md shrink-0 overflow-hidden">
+        {/* Continuous Network Constellation Geometric SVG Lines */}
+        <NetworkBackground className="opacity-15 pointer-events-none" />
+
+        {/* Horizontal Top Navigation Bar with subtle border-b border-white/15 */}
+        <TopNavbar 
+          activeTab={activeTab}
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            setIsSidebarOpen(false);
+            if (!['masuk', 'disposisi', 'arsip'].includes(tab)) setSelectedLetterId(null);
+          }}
+          onOpenMobileMenu={() => setIsSidebarOpen(true)}
+          onLogout={handleLogout}
+          isLoading={isLoading}
+        />
+
+        {/* Hero Banner (100% full width, seamlessly attached below Navbar, no outer rounding/shadows, no white gaps) */}
+        {activeTab === 'dashboard' && (
+          <HeroBanner 
+            suratList={suratList} 
+            onSelectSurat={handleSelectSurat} 
+          />
+        )}
+      </header>
+
       <main className="flex-1 flex flex-col min-w-0 w-full overflow-hidden">
-        {/* Header */}
-        <header className="h-16 bg-white border-b border-slate-200/80 flex items-center justify-between px-3 sm:px-4 lg:px-8 shrink-0">
-          <div className="flex items-center gap-2">
-            <button 
-              className="lg:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors"
-              onClick={() => setIsSidebarOpen(true)}
-              aria-label="Buka Menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <span className="hidden sm:inline text-slate-400 text-xs font-semibold">Beranda</span>
-            <span className="hidden sm:inline text-slate-300 text-xs">/</span>
-            <span className="text-blue-950 font-bold text-sm truncate max-w-[150px] sm:max-w-none">
-              {activeTab === 'dashboard' ? 'Dashboard & Tracking' : 
-               activeTab === 'masuk' ? 'Surat Masuk' :
-               activeTab === 'keluar' ? 'Surat Keluar' :
-               activeTab === 'disposisi' ? 'Disposisi Aktif' :
-               activeTab === 'arsip' ? 'Arsip Selesai' : 'Persuratan'}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            {isLoading && (
-              <span className="text-xs text-blue-600 animate-pulse font-bold bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
-                Sinkronisasi...
-              </span>
-            )}
-            <div className="relative hidden sm:block">
-              <input 
-                type="text" 
-                placeholder="Cari agenda / nomor surat..." 
-                className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 w-48 lg:w-64 transition-all" 
-              />
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-            </div>
-            <button className="sm:hidden p-2 text-slate-500 hover:text-blue-600 rounded-lg hover:bg-slate-100 transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-200 hover:border-rose-200 transition-colors"
-              title="Keluar dari sistem"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
-          </div>
-        </header>
-
-        {/* Content Grid */}
-        <div className="p-3 sm:p-4 lg:p-6 flex gap-4 lg:gap-6 flex-1 overflow-hidden w-full">
-          {activeTab === 'dashboard' ? (
+        {activeTab === 'dashboard' ? (
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-8 flex-1 overflow-y-auto">
             <DashboardTracking suratList={suratList} onSelectSurat={handleSelectSurat} />
-          ) : activeTab === 'keluar' ? (
+          </div>
+        ) : (
+          <div className="p-3 sm:p-5 lg:p-6 flex gap-4 lg:gap-6 flex-1 overflow-hidden w-full max-w-7xl mx-auto">
+            {activeTab === 'keluar' ? (
             <div className="flex flex-col h-full w-full overflow-hidden gap-5">
               <div className="bg-white p-5 lg:p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row md:items-end gap-4 shrink-0">
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -698,6 +681,7 @@ export default function App() {
             </div>
           )}
         </div>
+      )}
       </main>
 
       <AddLetterModal 

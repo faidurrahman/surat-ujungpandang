@@ -401,12 +401,11 @@ export function LetterDetail({ surat, disposisiHistory, currentUser, onBack, onA
                   </label>
                   <input 
                     type="file" 
-                    accept=".pdf,.doc,.docx" 
                     onChange={handleNotulenFileInput} 
                     className="text-xs w-full file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:font-bold file:bg-slate-200 file:text-slate-700 hover:file:bg-slate-300 cursor-pointer" 
                   />
                   <p className="text-[11px] text-slate-500">
-                    {notulenFile ? notulenFile.name : "PDF/Word (Max 5MB)"}
+                    {notulenFile ? notulenFile.name : "Bebas semua format file (Max 5MB)"}
                   </p>
                 </div>
               </>

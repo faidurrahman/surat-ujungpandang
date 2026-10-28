@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: 'Segoe UI', 'Open Sans', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+}
+
+:root, body {
+  font-family: 'Segoe UI', 'Open Sans', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+}

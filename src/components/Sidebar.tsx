@@ -25,14 +25,15 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen }: SidebarP
       {/* Mobile Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 lg:hidden transition-opacity duration-300"
           onClick={() => setIsOpen(false)}
         />
       )}
 
+      {/* Off-canvas Mobile Drawer */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-600 via-blue-700 to-indigo-950 text-white shadow-2xl lg:shadow-xl border-r border-blue-500/30 overflow-hidden flex flex-col shrink-0 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0",
-        isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none lg:pointer-events-auto"
+        "fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-gradient-to-b from-blue-600 via-blue-700 to-indigo-950 text-white shadow-2xl border-r border-blue-500/30 overflow-hidden flex flex-col shrink-0 transition-transform duration-300 ease-in-out lg:hidden",
+        isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
       )}>
         {/* Network / Constellation Geometric SVG Lines */}
         <NetworkBackground />
@@ -42,11 +43,11 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen }: SidebarP
           <div className="flex items-center gap-3 min-w-0">
             <MakassarLogo className="w-10 h-10" />
             <div className="min-w-0">
-              <h1 className="text-white font-extrabold text-base leading-tight tracking-wide">
-                E-PERSURATAN
+              <h1 className="text-white font-bold text-lg leading-tight tracking-tight">
+                SIMPADU
               </h1>
-              <span className="text-[10px] text-blue-200 font-bold uppercase tracking-wider block mt-0.5 truncate">
-                Kecamatan Ujung Pandang
+              <span className="text-xs text-blue-100 font-normal block mt-0.5 truncate">
+                E-Persuratan Kec. Ujung Pandang
               </span>
             </div>
           </div>
@@ -70,7 +71,10 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen }: SidebarP
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setIsOpen(false);
+                }}
                 className={cn(
                   "w-full flex items-center gap-3 px-3.5 py-2.5 text-left text-sm transition-all duration-200 relative group",
                   isActive 
